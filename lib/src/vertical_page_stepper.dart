@@ -178,11 +178,11 @@ class _VerticalPageStepperState extends State<VerticalPageStepper> {
   }
 
   void calculateIndicatorsStartPositions(int indicatorIndex, double pageValue) {
-    final deviceHeight = MediaQuery.of(context).size.height;
-    final safeAreaPaddings = MediaQuery.of(context).padding;
-    final appBarHeight = AppBar().preferredSize.height;
-    final availableHeight = deviceHeight - appBarHeight - safeAreaPaddings.top - safeAreaPaddings.bottom;
-    final centerPosition = availableHeight / 2;
+    //final deviceHeight = MediaQuery.of(context).size.height;
+    //final safeAreaPaddings = MediaQuery.of(context).padding;
+    //final appBarHeight = AppBar().preferredSize.height;
+    //final availableHeight = deviceHeight - appBarHeight - safeAreaPaddings.top - safeAreaPaddings.bottom;
+    final centerPosition = widget.steps.length * 40.0;
     final indicatorHeight = widget.indicatorSettings.activeRadius * 2;
     var indicatorInitialPosition = centerPosition;
     if (isIndicatorAboveCenter(indicatorIndex)) {
