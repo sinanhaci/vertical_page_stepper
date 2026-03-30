@@ -6,18 +6,7 @@ part 'widgets/indicator.dart';
 part 'widgets/title_shadow.dart';
 
 class VerticalPageStepper extends StatefulWidget {
-  const VerticalPageStepper({
-    Key? key,
-    required this.steps,
-    this.pageController,
-    this.indicatorSettings = const StepperIndicatorSettings(),
-    this.pageChangeDuration = const Duration(milliseconds: 500),
-    this.pageChangeCurve = Curves.easeOut,
-    this.physics,
-    this.onPageChanged,
-    this.scrollBehavior,
-    this.boxShadow
-  }) : super(key: key);
+  const VerticalPageStepper({Key? key, required this.steps, this.pageController, this.indicatorSettings = const StepperIndicatorSettings(), this.pageChangeDuration = const Duration(milliseconds: 500), this.pageChangeCurve = Curves.easeOut, this.physics, this.onPageChanged, this.scrollBehavior, this.boxShadow}) : super(key: key);
 
   final List<VerticalPageStep> steps;
   final PageController? pageController;
@@ -77,10 +66,11 @@ class _VerticalPageStepperState extends State<VerticalPageStepper> {
                 onPageChanged: widget.onPageChanged,
                 physics: widget.physics,
                 controller: pageController,
-                scrollBehavior: widget.scrollBehavior ?? const MaterialScrollBehavior().copyWith(
-                  overscroll: false,
-                  physics: const ClampingScrollPhysics(),
-                ),
+                scrollBehavior: widget.scrollBehavior ??
+                    const MaterialScrollBehavior().copyWith(
+                      overscroll: false,
+                      physics: const ClampingScrollPhysics(),
+                    ),
                 scrollDirection: Axis.vertical,
                 itemCount: widget.steps.length,
                 itemBuilder: (context, index) => Padding(
@@ -91,28 +81,28 @@ class _VerticalPageStepperState extends State<VerticalPageStepper> {
             ),
           ],
         ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: SizedBox(
-              child: ValueListenableBuilder<int>(
-                valueListenable: currentStepNotifier,
-                builder: (context, currentStep, child) {
-                  return Column(
-                    children: [
-                      for (var index = 0; index < currentStep; index++)
-                        GestureDetector(
-                          onTap: () => animateToPage(index),
-                          child: widget.steps[index].title,
-                        ),
-                      _TitleShadow(
-                        boxShadow: widget.boxShadow,
-                      )
-                    ],
-                  );
-                },
-              ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: SizedBox(
+            child: ValueListenableBuilder<int>(
+              valueListenable: currentStepNotifier,
+              builder: (context, currentStep, child) {
+                return Column(
+                  children: [
+                    for (var index = 0; index < currentStep; index++)
+                      GestureDetector(
+                        onTap: () => animateToPage(index),
+                        child: widget.steps[index].title,
+                      ),
+                    _TitleShadow(
+                      boxShadow: widget.boxShadow,
+                    )
+                  ],
+                );
+              },
             ),
           ),
+        ),
         for (var indicatorIndex = 0; indicatorIndex < widget.steps.length; indicatorIndex++)
           ValueListenableBuilder<double>(
             valueListenable: pageValueNotifier,
@@ -143,6 +133,7 @@ class _VerticalPageStepperState extends State<VerticalPageStepper> {
   }
 
   void animateToPage(int pageIndex) {
+    if (pageIndex > (pageController.page?.toInt() ?? 0)) return;
     pageController.animateToPage(
       pageIndex,
       duration: widget.pageChangeDuration,
@@ -150,8 +141,7 @@ class _VerticalPageStepperState extends State<VerticalPageStepper> {
     );
   }
 
-  Color? getIndicatorBackgroundColor(int indicatorIndex) =>
-      widget.steps[indicatorIndex].indicatorBackgroundColor ?? widget.indicatorSettings.backgroundColor;
+  Color? getIndicatorBackgroundColor(int indicatorIndex) => widget.steps[indicatorIndex].indicatorBackgroundColor ?? widget.indicatorSettings.backgroundColor;
 
   void calculateIndicatorPositions(int indicatorIndex, double pageValue) {
     //This if is needed because sometimes page controller listener is not triggering on last pixels
@@ -171,8 +161,7 @@ class _VerticalPageStepperState extends State<VerticalPageStepper> {
     }
     var newPosition = indicatorInitialPositions[indicatorIndex];
     if (pageValue > indicatorIndex.toDouble() && pageValue < indicatorIndex + 1) {
-      newPosition += (newPosition - indicatorPaddingWithTitle - (stepTitleBarHeight * indicatorIndex)) *
-          (indicatorIndex - pageValue);
+      newPosition += (newPosition - indicatorPaddingWithTitle - (stepTitleBarHeight * indicatorIndex)) * (indicatorIndex - pageValue);
     }
     indicatorPositions[indicatorIndex] = newPosition;
   }
